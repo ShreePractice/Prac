@@ -1,0 +1,25 @@
+
+# Tower of Hanoi using State Space Search
+
+def tower_of_hanoi(n, source, auxiliary, destination):
+    if n == 1:
+        print("Move disk 1 from", source, "to", destination)
+        return
+
+    tower_of_hanoi(n - 1, source, destination, auxiliary)
+
+    print("Move disk", n, "from", source, "to", destination)
+
+    tower_of_hanoi(n - 1, auxiliary, source, destination)
+
+
+# Initial State
+n = 3
+
+print("Tower of Hanoi Solution")
+print("Number of Disks:", n)
+print("\nSequence of Legal Moves:\n")
+
+tower_of_hanoi(n, 'A', 'B', 'C')
+
+print("\nTotal Moves:", (2 ** n) - 1)
