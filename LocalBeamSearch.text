@@ -1,0 +1,71 @@
+
+import random
+
+dist = [
+    [0, 10, 15, 20],
+    [10, 0, 35, 25],
+    [15, 35, 0, 30],
+    [20, 25, 30, 0]
+]
+
+cities = len(dist)
+k = 3
+iterations = 20
+
+def tour_distance(tour):
+    total = 0
+
+    for i in range(len(tour) - 1):
+        total += dist[tour[i]][tour[i + 1]]
+
+    total += dist[tour[-1]][tour[0]]
+    return total
+
+def get_neighbors(tour):
+    neighbors = []
+
+    for i in range(1, len(tour)):
+        for j in range(i + 1, len(tour)):
+            new_tour = tour[:]
+            new_tour[i], new_tour[j] = new_tour[j], new_tour[i]
+            neighbors.append(new_tour)
+
+    return neighbors
+
+def beam_search():
+    beam = []
+
+    for _ in range(k):
+        tour = list(range(cities))
+        random.shuffle(tour[1:])
+        beam.append(tour)
+
+    best_tour = None
+    best_distance = float('inf')
+
+    for step in range(iterations):
+
+        candidates = []
+
+        for tour in beam:
+            candidates.extend(get_neighbors(tour))
+
+        candidates.sort(key=tour_distance)
+        beam = candidates[:k]
+
+        if beam and tour_distance(beam[0]) < best_distance:
+            best_tour = beam[0][:]
+            best_distance = tour_distance(beam[0])
+
+        print("Iteration", step + 1,
+              "Best Distance:", best_distance)
+
+    return best_tour, best_distance
+
+best_tour, best_distance = beam_search()
+
+print("\nBest Tour:")
+print(" -> ".join(chr(65 + city) for city in best_tour),
+      "->", chr(65 + best_tour[0]))
+
+print("Minimum Distance:", best_distance)
