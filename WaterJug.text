@@ -1,0 +1,44 @@
+
+JUG1 = 4
+JUG2 = 3
+TARGET = 2
+
+visited = set()
+path = []
+
+def dfs(x, y):
+    if x == TARGET or y == TARGET:
+        path.append((x, y))
+        return True
+    if (x, y) in visited:
+        return False
+
+    visited.add((x, y))
+    path.append((x, y))
+    next_states = [
+        (JUG1, y),                        
+        (x, JUG2),                         
+        (0, y),                            
+        (x, 0),                            
+        (x - min(x, JUG2 - y),
+         y + min(x, JUG2 - y)),            
+        (x + min(y, JUG1 - x),
+         y - min(y, JUG1 - x))             
+    ]
+
+    for state in next_states:
+        if state not in visited:
+            if dfs(state[0], state[1]):
+                return True
+    path.pop()
+    return False
+print("Water Jug Problem using DFS")
+print("Jug 1 Capacity:", JUG1)
+print("Jug 2 Capacity:", JUG2)
+print("Target Amount:", TARGET)
+if dfs(0, 0):
+    print("\nSolution Path:")
+    for step, state in enumerate(path):
+        print("Step", step, ":", state)
+else:
+    print("No Solution Found")
